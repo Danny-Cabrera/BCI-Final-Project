@@ -1,4 +1,4 @@
-function[subj1TrainingGlove_down] = downsampleGlove (subj1TrainingGlove)
+function[subj1TrainingGlove_down] = downsampleGlove (subj1TrainingGlove, t)
 
 % What it does: Downsampling Glove Data
 % Input: 5 x A matrix of glove data
@@ -12,5 +12,8 @@ subj1TrainingGlove_down = NaN(5,lengthData/r);
 for i = 1:5
     subj1TrainingGlove_down(i,:) = decimate(subj1TrainingGlove(i,:), r);
 end
+
+
+subj1TrainingGlove_down = subj1TrainingGlove_down(:,t+1:end);
 
 end

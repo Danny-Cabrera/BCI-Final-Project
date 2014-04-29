@@ -9,7 +9,7 @@ function [ R ] = Rmatrix( Data, t )
 
 % Recursive Time Bins
 
-colsR = B * (t+1); %channels*features*(lag in windows + 1)
+colsR = B * (t+1) + 1; %channels*features*(lag in windows + 1)
 rowsR = A - t; %total windows - the lag windows
 R = NaN(rowsR, colsR);
 R(:,1) = 1;
