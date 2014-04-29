@@ -28,7 +28,7 @@ M = dataInputR(subj1TrainingEcog(:,1:NumSamps));
 %%
 % DOWNSAMPLE DATAGLOVE
 
-Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); %glove should be on same timescale as features
+Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps),t); %glove should be on same timescale as features
 %for now we have features in windows  50ms apart
 
 %%
