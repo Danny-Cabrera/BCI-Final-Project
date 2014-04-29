@@ -36,9 +36,9 @@ trainingDuration =(subject1TrainingECoG.data.channels(1).get_tsdetails.getDurati
 testingDuration =(subject1TestingECoG.data.channels(1).get_tsdetails.getDuration/10^6);
 
 numTraining = trainingDuration*samplingRate;
-numTraining = numTraining+2;
+numTraining = numTraining+1;
 numTesting = testingDuration*samplingRate;
-numTesting = numTesting+2; 
+numTesting = numTesting+1; 
 
 subj1TrainingEcog = zeros(62,numTraining);
 subj1TrainingGlove = zeros(5,numTraining);
