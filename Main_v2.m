@@ -22,18 +22,21 @@ importfile('Data.mat')
 
 % FEATURE EXTRATION ON DATA
 % Create Data Matrix for R
-NumSamps = 50000; %number of samples to run for now to save time
+NumSamps = 40000; %number of samples to run for now to save time
 M = dataInputR(subj1TrainingEcog(:,1:NumSamps)); 
 
 %%
 % DOWNSAMPLE DATAGLOVE
 
-Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); %first 100,000 samples for now
+Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); 
 
+%%
 % LINEAR REGRESSION
 
 % Create R Matrix
 R = Rmatrix(M,3);
+
+%%
 
 % Compute Beta (for each Finger of Glove)
 

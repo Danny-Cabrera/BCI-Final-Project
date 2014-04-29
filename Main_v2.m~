@@ -22,13 +22,13 @@ importfile('Data.mat')
 
 % FEATURE EXTRATION ON DATA
 % Create Data Matrix for R
-M = dataInputR(subj1TrainingEcog(:,1:100000)); % gonna just start out with 100,000 samples
+NumSamps = 40000; %number of samples to run for now to save time
+M = dataInputR(subj1TrainingEcog(:,1:NumSamps)); 
 
 %%
 % DOWNSAMPLE DATAGLOVE
 
-Y_down = downsampleGlove(subj1TrainingGlove(:,1:100000)); %first 100,000 samples for now
-
+Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); 
 % LINEAR REGRESSION
 
 % Create R Matrix
@@ -55,4 +55,4 @@ Y_pred_int = interpolationGlove(Y_pred);
 
 % CHECK CORRELATION 
 
-correlation = corr(Y_pred_int, subj1TrainingGlove(:,100000)); %this is against the same data it was trained on
+correlation = corr(Y_pred_int, subj1TrainingGlove(:,1:NumSamps)); %this is against the same data it was trained on

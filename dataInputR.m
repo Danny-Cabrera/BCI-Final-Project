@@ -2,7 +2,7 @@
 function[ M ] = dataInputR(x)
 
 % Build input for making X matrix
-
+tic %gonna keep track of how long this takes to run
 [NumChannels,w] = size(x); % num of channels and w is num samples
 Feats =FeatExt(x(1,:));
 n = length(Feats); %number of windows
@@ -17,6 +17,7 @@ for i=1:6:(6*NumChannels) % i jumping in 6's (num of feats) to num of feats * Nu
         j=j+1;
         if mod(j,5)==0
             sprintf('Calculating features for channel %d',j) %status update
+            toc %print time elapsed
         end
     end
 end
