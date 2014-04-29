@@ -28,7 +28,8 @@ M = dataInputR(subj1TrainingEcog(:,1:NumSamps));
 %%
 % DOWNSAMPLE DATAGLOVE
 
-Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps),t); %glove should be on same timescale as features
+t = 3
+Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); %glove should be on same timescale as features
 %for now we have features in windows  50ms apart
 
 %%
@@ -41,9 +42,23 @@ R = Rmatrix(M,3);
 
 % Compute Beta (for each Finger of Glove)
 
+
+% Compute size of R Matrix
+[rC, cC] = size(R)
+
+% Create Beta Matrix - of Coefficients
+B = NaN(rC,5);
+
+% Loop through each channel of Y
 for i = 1:5
-    Y_segment = Y_down(i,:)';
+
+    % Compute size of downsampled Y
+    [rY, cY] = size(Y_down(i,:))
+    
+    % 
+    Y_segment = Y_down(i,(cY - rC+1):end)';
     B(:,i) = mldivide(R'*R,R'*Y_segment);
+    
 end
 
 %%
