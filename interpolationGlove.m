@@ -1,5 +1,8 @@
 function[samples_1000hz] = interpolationGlove (samples_20hz)
     
+% What it does: Upsamples Glove Data
+% Input: 5 by A matrix of glove data (downsampled)
+% Output: 5 by 50*A matrix of gloves data (interpolated upsampled)
 
 
     lengthData = length(samples_20hz);
