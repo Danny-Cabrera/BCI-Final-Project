@@ -47,7 +47,7 @@ R = Rmatrix(M,3);
 [rC, cC] = size(R)
 
 % Create Beta Matrix - of Coefficients
-B = NaN(rC,5);
+B = NaN(cC,5);
 
 % Loop through each channel of Y
 for i = 1:5
@@ -62,11 +62,28 @@ for i = 1:5
 end
 
 %%
+
+% Create a new R Matrix based on Test Data
+
+% Select Test Data
+
+start = 40001;
+NumSamps = 10000; %number of samples to run for now to save time
+testData = dataInputR(subj1TrainingEcog(:,start:start + NumSamps)); 
+Rnew = Rmatrix(testData,3);
+
+
+%%
 %Compute Prediction
 
+% Create Prediction Matrix
+[rCtest, cCtest] = size(Rnew)
+Y_pred = NaN(5,rCtest);
+
+% For each finger, compute a prediction based on Rtest
 for i = 1:5
 
-    Y_pred(i,:) = (R*B(:,i))';
+    Y_pred(i,:) = (Rnew*B(:,i))';
 
 end
 

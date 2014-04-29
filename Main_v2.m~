@@ -42,22 +42,47 @@ R = Rmatrix(M,3);
 
 % Compute Beta (for each Finger of Glove)
 
-B = NaN(length(Y_down),5);
+
+% Compute size of R Matrix
 [rC, cC] = size(R)
 
+% Create Beta Matrix - of Coefficients
+B = NaN(cC,5);
+
+% Loop through each channel of Y
 for i = 1:5
 
+    % Compute size of downsampled Y
     [rY, cY] = size(Y_down(i,:))
+    
+    % 
     Y_segment = Y_down(i,(cY - rC+1):end)';
     B(:,i) = mldivide(R'*R,R'*Y_segment);
+    
 end
+
+%%
+
+% Create a new R Matrix based on Test Data
+
+% Select Test Data
+
+start = 40001;
+NumSamps = 10000; %number of samples to run for now to save time
+testData = dataInputR(subj1TrainingEcog(:,start:start + NumSamps)); 
+Rnew = Rmatrix(testData,3);
+
 
 %%
 %Compute Prediction
 
-for i = 1:5
+% Create Prediction Matrix
+Y_pred = NaN(5,rC);
 
-    Y_pred(i,:) = (R*B(:,i))';
+% For each finger, compute a prediction based on Rtest
+for i = 1:5
+si
+    Y_pred(i,:) = (Rnew*B(:,i))';
 
 end
 
