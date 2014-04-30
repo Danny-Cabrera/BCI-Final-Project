@@ -1,7 +1,7 @@
 function [sub_eval scoreTrain] = PredictFlex(Mtrain,Mtest, DataTrain, DataGlove, DataTest)
 %PredictFlex returns the 200000x5 predictions for 1 subject
 %scoreTrain to show you if things went OK, should be pretty high ~0.65
-
+tic
 % FEATURE EXTRATION ON DATA
 % load Data Matrix for R
 
@@ -11,14 +11,14 @@ M = Mtrain;
 
 %%
 % DOWNSAMPLE DATAGLOVE
+clear Y_down
 
-
-Y_down = downsampleGlove(DataGlove(:,:)); %glove should be on same timescale as features
+Y_down = downsampleGlove(DataGlove); %glove should be on same timescale as features
 %for now we have features in windows  50ms apart
 
 %%
 % LINEAR REGRESSION
-t = 3; %# of windows to lag
+t = 3; %# of windows to lag  note 3 seems to optimal, did some testing
 % Create R Matrix
 R = Rmatrix(M,t);
 %!! should not be including current , only previous 3 windows
@@ -76,7 +76,7 @@ Y_pred_int = interpolationGlove(Y_pred);
 % CHECK CORRELATION against the training data
 correlation = NaN(5,1);
 for i = 1:5
-    correlation(i) = corr(Y_pred_int(i,:)', DataGlove(i,:)'); %this is against the same data it was trained on
+    correlation(i) = corr(Y_pred_int(i,:)', DataGlove(i,1:length(Y_pred_int))'); %this is against the same data it was trained on
 end
 scoreTrain= (correlation(1)+correlation(2)+correlation(3)+correlation(5))/4 %not using 4th finger
 
@@ -107,6 +107,6 @@ Y_pred_test = [zeros(5,length(Y_down)-rC) Y_pred_test]; %zero padding the ones w
 
 Y_pred_test_int = interpolationGlove(Y_pred_test);
 sub_eval = Y_pred_test_int'; %they want 200,000x5
-
+toc
 
 

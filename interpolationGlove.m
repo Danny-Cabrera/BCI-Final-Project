@@ -11,7 +11,7 @@ function[samples_1000hz] = interpolationGlove (samples_20hz)
     x = (1:lengthData);
     xx = (dt:dt:lengthData);
     
-    samples_1000hz = NaN(5,lengthData/dt);
+    samples_1000hz = NaN(5,ceil(lengthData/dt));
     
     for i = 1:5
 

@@ -23,7 +23,9 @@
 % FEATURE EXTRATION ON DATA
 % Create Data Matrix for R
 NumSamps = 360000; %number of samples to run as training (90%)
-M = dataInputR(subj1TrainingEcog(:,1:NumSamps)); 
+%M = dataInputR(subj1TrainingEcog(:,1:NumSamps)); 
+%load saved file
+importfile('M360000subj1.mat')
 
 %note feats are normalized in FeatExt.m
 
@@ -109,7 +111,11 @@ scoreTrain= (correlation(1)+correlation(2)+correlation(3)+correlation(5))/4 %not
 ValidRange = (NumSamps+1:length(subj1TrainingEcog)-1);% just using the rest of training data (remaining 10%) as TESTING
 
 % Create Data Matrix for R
-Mvalid = dataInputR(subj1TrainingEcog(:,ValidRange));  
+%Mvalid = dataInputR(subj1TrainingEcog(:,ValidRange));  
+
+%load in Msubj1valid10percent
+importfile('Msubj1valid10percent.mat')
+
 % Create R Matrix
 Rvalid = Rmatrix(Mvalid,t); %must keep t the same
 %%

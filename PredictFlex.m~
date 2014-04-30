@@ -1,7 +1,7 @@
 function [sub_eval scoreTrain] = PredictFlex(Mtrain,Mtest, DataTrain, DataGlove, DataTest)
 %PredictFlex returns the 200000x5 predictions for 1 subject
 %scoreTrain to show you if things went OK, should be pretty high ~0.65
-
+tic
 % FEATURE EXTRATION ON DATA
 % load Data Matrix for R
 
@@ -11,9 +11,9 @@ M = Mtrain;
 
 %%
 % DOWNSAMPLE DATAGLOVE
+clear Y_down
 
-
-Y_down = downsampleGlove(DataGlove(:,:)); %glove should be on same timescale as features
+Y_down = downsampleGlove(DataGlove); %glove should be on same timescale as features
 %for now we have features in windows  50ms apart
 
 %%
@@ -35,6 +35,7 @@ R = Rmatrix(M,t);
 B = NaN(cC,5);
 
 % Loop through each channel of Y
+i=1;
 for i = 1:5
 
     % Compute size of downsampled Y
@@ -107,6 +108,6 @@ Y_pred_test = [zeros(5,length(Y_down)-rC) Y_pred_test]; %zero padding the ones w
 
 Y_pred_test_int = interpolationGlove(Y_pred_test);
 sub_eval = Y_pred_test_int'; %they want 200,000x5
-
+toc
 
 

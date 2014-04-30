@@ -6,11 +6,11 @@ function[subj1TrainingGlove_down] = downsampleGlove (subj1TrainingGlove)
 
 lengthData = length(subj1TrainingGlove);
 r = 50;
-subj1TrainingGlove_down = NaN(5,lengthData/r);
+subj1TrainingGlove_down = NaN(5,floor(lengthData/r));
 
 % Loops row by row
 for i = 1:5
-    subj1TrainingGlove_down(i,:) = decimate(subj1TrainingGlove(i,:), r);
+    subj1TrainingGlove_down(i,:) = decimate(subj1TrainingGlove(i,1:floor(lengthData/r)*r), r);
 end
 
 end
