@@ -22,21 +22,24 @@
 
 % FEATURE EXTRATION ON DATA
 % Create Data Matrix for R
-NumSamps = 40000; %number of samples to run for now to save time
+NumSamps = 360000; %number of samples to run as training (90%)
 M = dataInputR(subj1TrainingEcog(:,1:NumSamps)); 
+
+%note feats are normalized in FeatExt.m
 
 %%
 % DOWNSAMPLE DATAGLOVE
 
-t = 3
+
 Y_down = downsampleGlove(subj1TrainingGlove(:,1:NumSamps)); %glove should be on same timescale as features
 %for now we have features in windows  50ms apart
 
 %%
 % LINEAR REGRESSION
-
+t = 3; %# of windows to lag
 % Create R Matrix
-R = Rmatrix(M,3);
+R = Rmatrix(M,t);
+%!! should not be including current , only previous 3 windows
 
 %%
 
@@ -44,36 +47,78 @@ R = Rmatrix(M,3);
 
 
 % Compute size of R Matrix
-[rC, cC] = size(R)
+[rC, cC] = size(R);
 
 % Create Beta Matrix - of Coefficients
-B = NaN(rC,5);
+B = NaN(cC,5);
 
 % Loop through each channel of Y
 for i = 1:5
 
     % Compute size of downsampled Y
-    [rY, cY] = size(Y_down(i,:))
+    [rY, cY] = size(Y_down(i,:));
     
     % 
     Y_segment = Y_down(i,(cY - rC+1):end)';
-    B(:,i) = mldivide(R'*R,R'*Y_segment);
+    B(:,i) = mldivide((R'*R),(R'*Y_segment));
     
 end
 
 %%
 %Compute Prediction
-
+clear Y_pred
 for i = 1:5
 
     Y_pred(i,:) = (R*B(:,i))';
 
 end
+Y_pred = [zeros(5,length(Y_down)-rC) Y_pred];
 
+
+%%
 % INTERPOLATE PREDICTION
 
 Y_pred_int = interpolationGlove(Y_pred);
 
-% CHECK CORRELATION 
+%%
 
-correlation = corr(Y_pred_int, subj1TrainingGlove(:,1:NumSamps)); %this is against the same data it was trained on
+% CHECK CORRELATION against the training data
+correlation = NaN(5,1);
+for i = 1:5
+    correlation(i) = corr(Y_pred_int(i,:)', subj1TrainingGlove(i,1:NumSamps)'); %this is against the same data it was trained on
+end
+scoreTrain= (correlation(1)+correlation(2)+correlation(3)+correlation(5))/4 %not using 4th finger in score
+%%
+
+
+%CROSS VALIDATION
+%Use some more of the training data as TESTING data to see how well it works
+%need to make R matrix for this testing data
+
+ValidRange = (NumSamps+1:length(subj1TrainingEcog));% just using the rest of training data (remaining 10%) as TESTING
+
+% Create Data Matrix for R
+Mvalid = dataInputR(subj1TrainingEcog(:,ValidRange));  
+% Create R Matrix
+Rvalid = Rmatrix(Mvalid,t); %must keep t the same
+%%
+%Compute Predictions for validation
+clear Y_pred_valid
+for i = 1:5
+
+    Y_pred_valid(i,:) = (Rvalid*B(:,i))'; %must keep B the same from Training
+
+end
+Y_pred_valid = [zeros(5,length(Y_down)-rC) Y_pred_valid]; %zero padding the ones we couldn't predict in beginning
+
+%%
+% INTERPOLATE PREDICTION
+
+Y_pred_valid_int = interpolationGlove(Y_pred_valid);
+
+% CHECK CORRELATION against the training data
+correlation_valid = NaN(5,1);
+for i = 1:5
+    correlation_valid(i) = corr(Y_pred_valid_int(i,:)', subj1TrainingGlove(i,ValidRange)'); 
+end
+scoreValid= (correlation_valid(1)+correlation_valid(2)+correlation_valid(3)+correlation_valid(5))/4 %not using 4th finger in score

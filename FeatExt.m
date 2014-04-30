@@ -1,5 +1,5 @@
 function [Feats] = FeatExt(x)
-%FeatExt extracts features.
+%FeatExt extracts normalized features.
 %as of now keeping window size, overlap, freq bands, etc all set
 
 % x is just the data from 1 channel of 1 subject
@@ -31,6 +31,12 @@ for i= 1:NWindows
     Feats(6,i) = mean(mean(abs(S(160:175,i:i+1))));
     
 end
+
+%normalize features
+for j=1:6
+    Feats(j,:)=(Feats(j,:)-mean(Feats(j,:)))/std(Feats(j,:));
+end
+
 
 %these are the frequency features (row) for the one channel for each window
 %(columns)
