@@ -9,16 +9,16 @@ function [ R ] = Rmatrix( Data, t )
 
 % Recursive Time Bins
 
-colsR = B * (t+1); %channels*features*(lag in windows + 1)
+colsR = B * (t) + 1; %channels*features*(lag in windows) + 1 for intercept
 rowsR = A - t; %total windows - the lag windows
 R = NaN(rowsR, colsR);
 R(:,1) = 1;
 
 col = 1;
 
-for i = 1:B %For each column in the Data
+for i = 1:B %For each column in the Data 
     
-    for j = 1:t+1 %We add 4 rows to the R Matrix
+    for j = 1:t %We add t rows to the R Matrix
     
     col = col + 1;
 

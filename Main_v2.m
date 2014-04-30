@@ -64,9 +64,20 @@ for i = 1:5
     
 end
 
+
+
 %%
 %Compute Prediction
+
 clear Y_pred
+
+
+% Create Prediction Matrix
+[rC, cC] = size(R);
+Y_pred = NaN(5,rC);
+
+% For each finger, compute a prediction based on Rtest
+
 for i = 1:5
 
     Y_pred(i,:) = (R*B(:,i))';
@@ -95,7 +106,7 @@ scoreTrain= (correlation(1)+correlation(2)+correlation(3)+correlation(5))/4 %not
 %Use some more of the training data as TESTING data to see how well it works
 %need to make R matrix for this testing data
 
-ValidRange = (NumSamps+1:length(subj1TrainingEcog));% just using the rest of training data (remaining 10%) as TESTING
+ValidRange = (NumSamps+1:length(subj1TrainingEcog)-1);% just using the rest of training data (remaining 10%) as TESTING
 
 % Create Data Matrix for R
 Mvalid = dataInputR(subj1TrainingEcog(:,ValidRange));  

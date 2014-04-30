@@ -64,9 +64,20 @@ for i = 1:5
     
 end
 
+
+
 %%
 %Compute Prediction
+
 clear Y_pred
+
+
+% Create Prediction Matrix
+[rC, cC] = size(R);
+Y_pred = NaN(5,rC);
+
+% For each finger, compute a prediction based on Rtest
+
 for i = 1:5
 
     Y_pred(i,:) = (R*B(:,i))';
@@ -87,7 +98,7 @@ correlation = NaN(5,1);
 for i = 1:5
     correlation(i) = corr(Y_pred_int(i,:)', subj1TrainingGlove(i,1:NumSamps)'); %this is against the same data it was trained on
 end
-scoreTrain= mean(correlation)
+scoreTrain= (correlation(1)+correlation(2)+correlation(3)+correlation(5))/4 %not using 4th finger in score
 %%
 
 
@@ -95,7 +106,7 @@ scoreTrain= mean(correlation)
 %Use some more of the training data as TESTING data to see how well it works
 %need to make R matrix for this testing data
 
-ValidRange = (NumSamps+1:length(subj1TrainingEcog);% just using the rest of training data (remaining 10%) as TESTING
+ValidRange = (NumSamps+1:length(subj1TrainingEcog)-1);% just using the rest of training data (remaining 10%) as TESTING
 
 % Create Data Matrix for R
 Mvalid = dataInputR(subj1TrainingEcog(:,ValidRange));  
@@ -121,4 +132,4 @@ correlation_valid = NaN(5,1);
 for i = 1:5
     correlation_valid(i) = corr(Y_pred_valid_int(i,:)', subj1TrainingGlove(i,ValidRange)'); 
 end
-scoreValid= (correlation_valid(1)+correlation_valid(2)+correlation_valid(3)+correlation_valid(5))/4
+scoreValid= (correlation_valid(1)+correlation_valid(2)+correlation_valid(3)+correlation_valid(5))/4 %not using 4th finger in score
